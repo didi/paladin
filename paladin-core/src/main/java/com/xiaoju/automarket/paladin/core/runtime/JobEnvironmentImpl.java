@@ -1,5 +1,6 @@
 package com.xiaoju.automarket.paladin.core.runtime;
 
+import akka.actor.ActorSystem;
 import com.typesafe.config.Config;
 
 /**
@@ -10,12 +11,15 @@ public final class JobEnvironmentImpl implements JobEnvironment {
 
     private final Config config;
     private final JobEventDispatcher jobEventDispatcher;
+    private final JobStore jobStore;
+    private final ActorSystem actorSystem;
 
-    public JobEnvironmentImpl(Config config, JobEventDispatcher jobEventDispatcher) {
+    public JobEnvironmentImpl(Config config, JobEventDispatcher jobEventDispatcher, JobStore jobStore, ActorSystem actorSystem) {
         this.config = config;
         this.jobEventDispatcher = jobEventDispatcher;
+        this.jobStore = jobStore;
+        this.actorSystem = actorSystem;
     }
-
 
     @Override
     public Config configuration() {
@@ -25,5 +29,15 @@ public final class JobEnvironmentImpl implements JobEnvironment {
     @Override
     public JobEventDispatcher eventDispatcher() {
         return this.jobEventDispatcher;
+    }
+
+    @Override
+    public JobStore jobStore() {
+        return this.jobStore;
+    }
+
+    @Override
+    public ActorSystem actorSystem() {
+        return this.actorSystem;
     }
 }

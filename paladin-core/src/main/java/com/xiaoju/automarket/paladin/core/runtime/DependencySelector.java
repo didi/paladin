@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * @Author Luogh
- * @Date 2020/11/8
+ * @Date 2020/12/11
  **/
-public interface DependencySelector<T extends Event> {
+public interface DependencySelector {
 
-    List<DependencyDescriptor<T>> selectNextDependencies(T event, Context context);
+    List<DependencyDescriptor> select(Event event);
 }

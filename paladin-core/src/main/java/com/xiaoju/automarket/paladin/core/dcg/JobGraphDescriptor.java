@@ -1,6 +1,5 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.common.Event;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +14,8 @@ import java.util.Map;
 @Setter
 public class JobGraphDescriptor {
 
-    private ActionDescriptor<? extends Event, ? extends Event> rootAction;
-    private Map<String, DependencyDescriptor<? extends Event>> dependencies;
-    private Map<String, List<String>> action2DependencyMap;
+    private ActionDescriptor rootAction;
+    private Map<Integer, DependencyDescriptor> dependencies;
+    private Map<Integer, List<Integer>> action2DependencyMap;
 
 }

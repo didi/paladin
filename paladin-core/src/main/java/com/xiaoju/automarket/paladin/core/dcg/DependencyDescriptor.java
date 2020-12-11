@@ -1,6 +1,5 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.common.Event;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,12 +9,12 @@ import lombok.Setter;
  **/
 @Getter
 @Setter
-public class DependencyDescriptor<T extends Event> {
+public class DependencyDescriptor {
     private final int dependencyId;
     private double weight;
-    private ActionDescriptor<T, ? extends Event> preAction;
-    private ConditionDescriptor<T> condition;
-    private ActionDescriptor<T, ? extends Event> nextAction;
+    private ActionDescriptor preAction;
+    private ConditionDescriptor condition;
+    private ActionDescriptor nextAction;
 
     public DependencyDescriptor(int dependencyId) {
         this.dependencyId = dependencyId;

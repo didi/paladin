@@ -1,13 +1,11 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.common.Event;
 import com.xiaoju.automarket.paladin.core.runtime.ActionHandler;
 import com.xiaoju.automarket.paladin.core.runtime.DependencySelector;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * @Author Luogh
@@ -15,11 +13,11 @@ import java.util.UUID;
  **/
 @Getter
 @Setter
-public class ActionDescriptor<IN extends Event, OUT extends Event> {
+public class ActionDescriptor {
     private final int actionId;
-    private Class<? extends ActionHandler<IN, OUT>> actionHandler;
-    private Class<? extends DependencySelector<OUT>> dependencySelector;
-
+    private Class<? extends ActionHandler> actionHandler;
+    private List<DependencyDescriptor> downstreamDependencies;
+    private Class< ? extends DependencySelector> dependencySelector;
 
     public ActionDescriptor(int actionId) {
         this.actionId = actionId;

@@ -1,5 +1,6 @@
 package com.xiaoju.automarket.paladin.core.runtime;
 
+import akka.actor.ActorSystem;
 import com.typesafe.config.Config;
 
 /**
@@ -12,4 +13,6 @@ public interface JobEnvironment {
     JobEventDispatcher eventDispatcher();
 
     JobStore jobStore();
+
+    ActorSystem actorSystem();
 }

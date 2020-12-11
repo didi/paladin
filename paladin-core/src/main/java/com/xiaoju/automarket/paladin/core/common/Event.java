@@ -13,10 +13,9 @@ import java.util.Map;
 @Setter
 public class Event {
     private String eventId;
-    private String pid;
-    private String eventName;
+    private String eventType;
+    private long pid;
     private long eventTime;
     private int bizType;
     private Map<String, Object> fields;
-    private int actionId;
 }

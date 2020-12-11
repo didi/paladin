@@ -1,6 +1,5 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.common.Event;
 import com.xiaoju.automarket.paladin.core.runtime.ConditionHandler;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +10,6 @@ import lombok.Setter;
  **/
 @Getter
 @Setter
-public class ConditionDescriptor<T extends Event> {
-    private Class<? extends ConditionHandler<T>> condition;
+public class ConditionDescriptor {
+    private Class<? extends ConditionHandler> condition;
 }

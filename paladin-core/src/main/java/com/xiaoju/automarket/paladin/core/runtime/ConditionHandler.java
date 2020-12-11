@@ -7,14 +7,14 @@ import com.xiaoju.automarket.paladin.core.common.Event;
  * @Author Luogh
  * @Date 2020/11/8
  **/
-public interface ConditionHandler<T extends Event> {
+public interface ConditionHandler {
     void configure(Config config);
 
-    boolean doCheck(T event, ConditionContext<T> context);
+    boolean doCheck(Event event, ConditionContext context);
 
     void destroy();
 
-    interface ConditionContext<T> {
+    interface ConditionContext {
         Context context();
     }
 }

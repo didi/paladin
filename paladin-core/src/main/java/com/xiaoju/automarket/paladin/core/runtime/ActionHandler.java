@@ -3,23 +3,17 @@ package com.xiaoju.automarket.paladin.core.runtime;
 import com.typesafe.config.Config;
 import com.xiaoju.automarket.paladin.core.common.Event;
 
+import java.util.List;
+
 /**
  * @Author Luogh
  * @Date 2020/11/8
  **/
-public interface ActionHandler<IN extends Event, OUT extends Event> {
+public interface ActionHandler {
 
     void configure(Config config);
 
-    void beforeAction(IN event);
-
-    void doAction(IN event, ActionContext<OUT> actionContext);
+    ActionResult doAction(Event event);
 
     void destroy();
-
-    interface ActionContext<OUT> {
-        void collect(OUT event);
-
-        Context context();
-    }
 }
