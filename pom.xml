@@ -12,6 +12,7 @@
         <module>paladin-common</module>
         <module>paladin-core</module>
         <module>paladin-web</module>
+        <module>paladin-spring</module>
     </modules>
 
     <properties>
