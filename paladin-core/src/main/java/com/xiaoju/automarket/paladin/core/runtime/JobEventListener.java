@@ -1,11 +1,11 @@
 package com.xiaoju.automarket.paladin.core.runtime;
 
-import com.xiaoju.automarket.paladin.core.common.JobStatus;
+import com.xiaoju.automarket.paladin.core.common.JobStatusEnum;
 
 /**
  * @Author Luogh
  * @Date 2020/12/7
  **/
 public interface JobEventListener {
-    void onJobStateChanged(JobStatus jobStatus, JobInstance jobInstance, Object attachment);
+    void onJobStateChanged(JobStatusEnum jobStatus, JobInstance jobInstance, Object attachment);
 }

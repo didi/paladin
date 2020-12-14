@@ -11,5 +11,5 @@ import java.util.List;
  **/
 public interface DependencySelector {
 
-    List<DependencyDescriptor> select(Event event);
+    List<DependencyDescriptor> select(Event event, List<DependencyDescriptor> candidates);
 }

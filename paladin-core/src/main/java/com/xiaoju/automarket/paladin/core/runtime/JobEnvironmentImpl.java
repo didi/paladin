@@ -12,13 +12,11 @@ public final class JobEnvironmentImpl implements JobEnvironment {
     private final Config config;
     private final JobEventDispatcher jobEventDispatcher;
     private final JobStore jobStore;
-    private final ActorSystem actorSystem;
 
-    public JobEnvironmentImpl(Config config, JobEventDispatcher jobEventDispatcher, JobStore jobStore, ActorSystem actorSystem) {
+    public JobEnvironmentImpl(Config config, JobEventDispatcher jobEventDispatcher, JobStore jobStore) {
         this.config = config;
         this.jobEventDispatcher = jobEventDispatcher;
         this.jobStore = jobStore;
-        this.actorSystem = actorSystem;
     }
 
     @Override
@@ -34,10 +32,5 @@ public final class JobEnvironmentImpl implements JobEnvironment {
     @Override
     public JobStore jobStore() {
         return this.jobStore;
-    }
-
-    @Override
-    public ActorSystem actorSystem() {
-        return this.actorSystem;
     }
 }

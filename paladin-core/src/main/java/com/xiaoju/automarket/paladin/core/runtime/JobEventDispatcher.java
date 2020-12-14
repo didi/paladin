@@ -1,6 +1,6 @@
 package com.xiaoju.automarket.paladin.core.runtime;
 
-import com.xiaoju.automarket.paladin.core.common.JobStatus;
+import com.xiaoju.automarket.paladin.core.common.JobStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,7 +15,7 @@ public class JobEventDispatcher implements JobEventPublisher {
     private final CopyOnWriteArrayList<JobEventListener> listeners = new CopyOnWriteArrayList<>();
 
     @Override
-    public void publish(JobStatus status, JobInstance jobInstance, Object attachment) {
+    public void publish(JobStatusEnum status, JobInstance jobInstance, Object attachment) {
         for (JobEventListener jobEventListener : listeners) {
             jobEventListener.onJobStateChanged(status, jobInstance, attachment);
         }

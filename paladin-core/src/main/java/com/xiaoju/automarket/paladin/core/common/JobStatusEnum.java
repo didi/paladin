@@ -4,7 +4,7 @@ package com.xiaoju.automarket.paladin.core.common;
  * @Author Luogh
  * @Date 2020/12/6
  **/
-public enum JobStatus {
+public enum JobStatusEnum {
     SUBMITTED, /*已提交*/
     DEPLOYED, /*已部署*/
     INITIALIZED, /*初始化*/

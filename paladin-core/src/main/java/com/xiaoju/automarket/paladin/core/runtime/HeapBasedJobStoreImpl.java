@@ -1,9 +1,9 @@
 package com.xiaoju.automarket.paladin.core.runtime;
 
-import com.xiaoju.automarket.paladin.core.common.JobStatus;
+import com.typesafe.config.Config;
+import com.xiaoju.automarket.paladin.core.common.JobStatusEnum;
 import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class HeapBasedJobStoreImpl implements JobStore {
     private final Map<String, JobInstance> ALL_JOBS = new ConcurrentHashMap<>();
 
     @Override
-    public void configure(JobEnvironment environment) {
+    public void configure(Config configuration) {
 
     }
 
@@ -28,12 +28,12 @@ public class HeapBasedJobStoreImpl implements JobStore {
     }
 
     @Override
-    public void updateJobStatus(String jobId, JobStatus jobStatus, Throwable exception) {
+    public void updateJobStatus(String jobId, JobStatusEnum jobStatus, Throwable exception) {
 
     }
 
     @Override
-    public List<JobInstance> getJobsInStatus(Set<JobStatus> jobStatusSet, int expectedSize) {
+    public List<JobInstance> getJobsInStatus(Set<JobStatusEnum> jobStatusSet, int expectedSize) {
         return null;
     }
 }
