@@ -1,6 +1,5 @@
-package com.xiaoju.automarket.paladin.core.runtime;
+package com.xiaoju.automarket.paladin.core.runtime.job;
 
-import akka.actor.ActorSystem;
 import com.typesafe.config.Config;
 
 /**

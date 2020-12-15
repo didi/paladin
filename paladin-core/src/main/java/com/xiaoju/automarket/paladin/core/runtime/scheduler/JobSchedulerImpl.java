@@ -1,10 +1,12 @@
-package com.xiaoju.automarket.paladin.core.runtime;
+package com.xiaoju.automarket.paladin.core.runtime.scheduler;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.typesafe.config.Config;
 import com.xiaoju.automarket.paladin.core.common.JTuple2;
-import com.xiaoju.automarket.paladin.core.common.JobStatusEnum;
+import com.xiaoju.automarket.paladin.core.common.StatusEnum;
+import com.xiaoju.automarket.paladin.core.runtime.job.JobStore;
+import com.xiaoju.automarket.paladin.core.runtime.job.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -104,11 +106,11 @@ public class JobSchedulerImpl implements JobScheduler {
         public void run() {
             while (isRunning) {
                 try {
-                    Set<JobStatusEnum> candidateJobStates = Sets.newHashSet(JobStatusEnum.SUBMITTED, JobStatusEnum.RUNNING, JobStatusEnum.DEPLOYED, JobStatusEnum.INITIALIZED);
+                    Set<StatusEnum> candidateJobStates = Sets.newHashSet(StatusEnum.SUBMITTED, StatusEnum.RUNNING, StatusEnum.DEPLOYED, StatusEnum.INITIALIZED);
                     List<JobInstance> candidateJobs = jobStore.getJobsInStatus(candidateJobStates, runningJobs.remainingCapacity());
                     for (JobInstance jobInstance : candidateJobs) {
                         synchronized (JOB_LOCK) {
-                            if (jobInstance.getJobStatus() == JobStatusEnum.SUBMITTED) {
+                            if (jobInstance.getJobStatus() == StatusEnum.SUBMITTED) {
                                 deployJob(jobInstance);
                             } else {
                                 if (!runningJobMap.containsKey(jobInstance.getJobId())) {
@@ -136,7 +138,7 @@ public class JobSchedulerImpl implements JobScheduler {
                             runningJobs.remove(jobInstance);
                             runningJobMap.remove(jobInstance.getJobId());
                             log.warn(String.format("deploy job: [%s] to executor: [%s] failed with exception:", jobInstance.getJobId(), jobExecutor.getJobExecutorId()), throwable);
-                            jobStore.updateJobStatus(jobInstance.getJobId(), JobStatusEnum.FAILED, throwable);
+                            jobStore.updateJobStatus(jobInstance.getJobId(), StatusEnum.FAILED, throwable);
                             throw throwable;
                         } else {
                             AtomicReference<JobExecutor> jobExecutorRef = new AtomicReference<>();
@@ -144,7 +146,7 @@ public class JobSchedulerImpl implements JobScheduler {
                             JTuple2<JobInstance, AtomicReference<JobExecutor>> jobTuple = new JTuple2<>(jobInstance, jobExecutorRef);
                             runningJobs.putLast(jobInstance);
                             runningJobMap.put(jobInstance.getJobId(), jobTuple);
-                            jobStore.updateJobStatus(jobInstance.getJobId(), JobStatusEnum.RUNNING, null);
+                            jobStore.updateJobStatus(jobInstance.getJobId(), StatusEnum.RUNNING, null);
                             log.info(String.format("deploy job: [%s] to executor: [%s] success", jobInstance.getJobId(), jobExecutor.getJobExecutorId()));
                         }
                     } catch (Throwable e) {

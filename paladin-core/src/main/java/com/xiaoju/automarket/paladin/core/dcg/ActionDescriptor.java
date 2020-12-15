@@ -1,7 +1,9 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.runtime.ActionHandler;
-import com.xiaoju.automarket.paladin.core.runtime.DependencySelector;
+import com.xiaoju.automarket.paladin.core.runtime.handler.ActionHandler;
+import com.xiaoju.automarket.paladin.core.runtime.handler.DependencySelectorStrategy;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -9,41 +11,15 @@ import java.util.List;
  * @Author Luogh
  * @Date 2020/11/8
  **/
+@Getter
+@Setter
 public class ActionDescriptor {
     private final int actionId;
     private Class<? extends ActionHandler> actionHandler;
     private List<DependencyDescriptor> downstreamDependencies;
-    private Class<? extends DependencySelector> dependencySelector;
+    private Class<? extends DependencySelectorStrategy> dependencySelectorStrategy;
 
     public ActionDescriptor(int actionId) {
         this.actionId = actionId;
-    }
-
-    public int getActionId() {
-        return actionId;
-    }
-
-    public Class<? extends ActionHandler> getActionHandler() {
-        return actionHandler;
-    }
-
-    public void setActionHandler(Class<? extends ActionHandler> actionHandler) {
-        this.actionHandler = actionHandler;
-    }
-
-    public List<DependencyDescriptor> getDownstreamDependencies() {
-        return downstreamDependencies;
-    }
-
-    public void setDownstreamDependencies(List<DependencyDescriptor> downstreamDependencies) {
-        this.downstreamDependencies = downstreamDependencies;
-    }
-
-    public Class<? extends DependencySelector> getDependencySelector() {
-        return dependencySelector;
-    }
-
-    public void setDependencySelector(Class<? extends DependencySelector> dependencySelector) {
-        this.dependencySelector = dependencySelector;
     }
 }

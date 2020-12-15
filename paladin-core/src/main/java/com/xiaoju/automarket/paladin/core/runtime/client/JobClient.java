@@ -1,4 +1,4 @@
-package com.xiaoju.automarket.paladin.core.runtime;
+package com.xiaoju.automarket.paladin.core.runtime.client;
 
 import com.xiaoju.automarket.paladin.core.common.Job;
 import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;

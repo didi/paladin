@@ -6,7 +6,7 @@ package com.xiaoju.automarket.paladin.core.common;
  **/
 public class Job {
     private String jobId;
-    private JobStatusEnum status;
+    private StatusEnum status;
 
     public Job(String jobId) {
         this.jobId = jobId;
@@ -20,11 +20,11 @@ public class Job {
         this.jobId = jobId;
     }
 
-    public JobStatusEnum getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(JobStatusEnum status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 }

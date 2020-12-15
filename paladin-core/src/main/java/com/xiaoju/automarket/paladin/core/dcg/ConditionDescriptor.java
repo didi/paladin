@@ -1,6 +1,6 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import com.xiaoju.automarket.paladin.core.runtime.ConditionHandler;
+import com.xiaoju.automarket.paladin.core.runtime.handler.ConditionHandler;
 
 /**
  * @Author Luogh

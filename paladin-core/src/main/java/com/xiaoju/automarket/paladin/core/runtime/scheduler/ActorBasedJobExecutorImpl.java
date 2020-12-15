@@ -1,12 +1,19 @@
-package com.xiaoju.automarket.paladin.core.runtime;
+package com.xiaoju.automarket.paladin.core.runtime.scheduler;
 
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import com.google.common.base.Preconditions;
-import com.xiaoju.automarket.paladin.core.common.JobStatusEnum;
+import com.xiaoju.automarket.paladin.core.common.StatusEnum;
 import com.xiaoju.automarket.paladin.core.dcg.ActionDescriptor;
 import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.runtime.IngestActionTask;
+import com.xiaoju.automarket.paladin.core.runtime.SinkActionTask;
+import com.xiaoju.automarket.paladin.core.runtime.TransformActionTask;
+import com.xiaoju.automarket.paladin.core.runtime.handler.ActionHandler;
+import com.xiaoju.automarket.paladin.core.runtime.job.JobEnvironment;
+import com.xiaoju.automarket.paladin.core.runtime.job.JobExecutor;
+import com.xiaoju.automarket.paladin.core.runtime.job.JobInstance;
 import com.xiaoju.automarket.paladin.core.runtime.util.AkkaUtil;
 import com.xiaoju.automarket.paladin.core.util.Util;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +61,7 @@ public class ActorBasedJobExecutorImpl implements JobExecutor {
         this.jobInstanceHolder.set(newJob);
         // deployed
         deployActionTasksInJobGraph(newJob.getGraphDescriptor());
-        this.environment.jobStore().updateJobStatus(newJob.getJobId(), JobStatusEnum.DEPLOYED, null);
+        this.environment.jobStore().updateJobStatus(newJob.getJobId(), StatusEnum.DEPLOYED, null);
         // initialized
         // running
         return null;
@@ -66,7 +73,7 @@ public class ActorBasedJobExecutorImpl implements JobExecutor {
             if (!this.action2ActorRefMap.containsKey(entry.getKey())) {
                 Class<? extends ActionHandler> clazz = entry.getValue().getActionHandler();
                 ActorRef actorRef;
-                if (clazz.isAssignableFrom(IngestActionHandler.class)) {
+                if (clazz.isAssignableFrom(EventSubscriber.class)) {
                     actorRef = actorSystem.actorOf(IngestActionTask.apply(this.environment, entry.getValue()));
                 } else if (clazz.isAssignableFrom(TransformActionHandler.class)) {
                     actorRef = actorSystem.actorOf(TransformActionTask.apply(this.environment, entry.getValue()));

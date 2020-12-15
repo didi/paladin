@@ -1,4 +1,4 @@
-package com.xiaoju.automarket.paladin.core.runtime;
+package com.xiaoju.automarket.paladin.core.runtime.job;
 
 import java.util.concurrent.CompletableFuture;
 
