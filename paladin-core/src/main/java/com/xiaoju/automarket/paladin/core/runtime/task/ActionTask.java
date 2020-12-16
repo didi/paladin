@@ -5,24 +5,21 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.japi.pf.ReceiveBuilder;
 import akka.pattern.Patterns;
-import akka.util.Timeout;
 import com.google.common.base.Preconditions;
-import com.xiaoju.automarket.paladin.core.common.StatusEnum;
-import com.xiaoju.automarket.paladin.core.dcg.DependencyDescriptor.DependencyDescriptorView;
+import com.xiaoju.automarket.paladin.core.common.ExecutionStateEnum;
+import com.xiaoju.automarket.paladin.core.runtime.dcg.DependencyDescriptor.DependencyDescriptorView;
 import com.xiaoju.automarket.paladin.core.runtime.handler.ActionHandler;
 import com.xiaoju.automarket.paladin.core.runtime.handler.DependencySelectorStrategy;
-import com.xiaoju.automarket.paladin.core.runtime.task.Messages.*;
+import com.xiaoju.automarket.paladin.core.runtime.message.*;
 import com.xiaoju.automarket.paladin.core.util.FutureUtil;
+import com.xiaoju.automarket.paladin.core.util.ReflectionUtil;
 import lombok.extern.slf4j.Slf4j;
-import scala.concurrent.Future;
-import scala.reflect.ClassTag;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.stream.Collectors.toList;
@@ -34,24 +31,24 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class ActionTask extends AbstractActorWithStash {
 
-    private final AtomicReference<StatusEnum> taskStatus;
-    private final int actionId;
+    private final AtomicReference<ExecutionStateEnum> taskStatus;
+    private final String actionId;
     private final ActionHandler actionHandler;
     private final TaskContext taskContext;
-    private final Map<Integer, RegisterDependency> upperStreamDependencies;
-    private final Map<Integer, RegisterDependency> downStreamDependencies;
+    private final Map<String, RegisterDependency> upperStreamDependencies;
+    private final Map<String, RegisterDependency> downStreamDependencies;
     private final DependencySelectorStrategy dependencySelectorStrategy;
 
 
-    private ActionTask(int actionId, ActionHandler actionHandler, TaskContext taskContext,
+    private ActionTask(String actionId, ActionHandler actionHandler, TaskContext taskContext,
                        DependencySelectorStrategy dependencySelectorStrategy) {
         this(actionId, actionHandler, taskContext, dependencySelectorStrategy, new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
     }
 
-    private ActionTask(int actionId, ActionHandler actionHandler, TaskContext taskContext,
+    private ActionTask(String actionId, ActionHandler actionHandler, TaskContext taskContext,
                        DependencySelectorStrategy dependencySelectorStrategy,
-                       Map<Integer, RegisterDependency> upperStreamDependencies,
-                       Map<Integer, RegisterDependency> downstreamDependencies) {
+                       Map<String, RegisterDependency> upperStreamDependencies,
+                       Map<String, RegisterDependency> downstreamDependencies) {
         this.actionId = actionId;
         this.actionHandler = actionHandler;
         this.taskContext = taskContext;
@@ -59,8 +56,8 @@ public class ActionTask extends AbstractActorWithStash {
         this.downStreamDependencies = downstreamDependencies;
         this.upperStreamDependencies = upperStreamDependencies;
 
-        AtomicReference<StatusEnum> taskStatus = new AtomicReference<>();
-        taskStatus.set(StatusEnum.DEPLOYED);
+        AtomicReference<ExecutionStateEnum> taskStatus = new AtomicReference<>();
+        taskStatus.set(ExecutionStateEnum.DEPLOYED);
         this.taskStatus = taskStatus;
     }
 
@@ -78,37 +75,16 @@ public class ActionTask extends AbstractActorWithStash {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(TaskInitStateRequest.class,
-                        request -> {
-                            try {
-                                actionHandler.initialize(taskContext.getConfig());
-                                getContext().become(onInitializeState());
-                                Response<Boolean> response = new Response<>();
-                                response.setSuccess(true);
-                                getSender().tell(response, self());
-                                taskStatus.set(StatusEnum.INITIALIZED);
-                            } catch (Throwable e) {
-                                log.error("task init failed for action:" + actionId, e);
-                                Response<Boolean> response = new Response<>();
-                                response.setSuccess(false);
-                                response.setException(e);
-                                getSender().tell(response, self());
-                                taskStatus.set(StatusEnum.FAILED);
-                            }
-                        })
-                .match(TaskRunningStateRequest.class, msg -> {
-                    try {
-                        unstashAll();
-                        getContext().become(onRunningState());
-                        taskStatus.set(StatusEnum.RUNNING);
-                    } catch (Exception e) {
-                        log.error("task switch state: " + taskStatus.get() + " to running state failed for action:" + actionId, e);
-                        Response<Boolean> response = new Response<>();
-                        response.setSuccess(false);
-                        response.setException(e);
-                        getSender().tell(response, self());
-                        taskStatus.set(StatusEnum.FAILED);
-                    }
+                .match(TaskInitStateRequest.class, request -> {
+                    actionHandler.initialize(taskContext.getConfig());
+                    getContext().become(onInitializeState());
+                    taskStatus.set(ExecutionStateEnum.INITIALIZED);
+                    getSender().tell(AcknowledgeResponse.getInstance(), self());
+                }).match(TaskRunningStateRequest.class, msg -> {
+                    unstashAll();
+                    getContext().become(onRunningState());
+                    taskStatus.set(ExecutionStateEnum.RUNNING);
+                    getSender().tell(AcknowledgeResponse.getInstance(), self());
                 }).match(TaskCancelStateRequest.class, msg -> {
                     // TODO
                 })
@@ -123,17 +99,19 @@ public class ActionTask extends AbstractActorWithStash {
                     } else {
                         registerDependency(upperStreamDependencies, msg);
                     }
+                    getSender().tell(AcknowledgeResponse.getInstance(), self());
                 })
-                .match(UnRegisterDependencyRequest.class, msg -> {
+                .match(UnRegisterDependency.class, msg -> {
                     if (msg.isOutside()) {
                         downStreamDependencies.remove(msg.getDependencyId());
                     } else {
                         upperStreamDependencies.remove(msg.getDependencyId());
                     }
+                    getSender().tell(AcknowledgeResponse.getInstance(), self());
                 });
     }
 
-    private void registerDependency(Map<Integer, RegisterDependency> dependencyMap, RegisterDependency dependency) {
+    private void registerDependency(Map<String, RegisterDependency> dependencyMap, RegisterDependency dependency) {
         Preconditions.checkArgument(dependencyMap != null);
         if (!dependencyMap.containsKey(dependency.getDependencyId())) {
             dependencyMap.put(dependency.getDependencyId(), dependency);
@@ -153,33 +131,35 @@ public class ActionTask extends AbstractActorWithStash {
     }
 
     private Receive onRunningState() {
-        Timeout timeout = new Timeout(1, TimeUnit.SECONDS);
         final ActorRef self = self();
         return dependencyMsgReceiveBuilder()
                 .match(SubscriptionEvent.class, msg -> {
-                    ActionHandler.ActionResult actionResult = this.actionHandler.doAction(msg);
-                    if (!this.downStreamDependencies.isEmpty()) {
-                        Preconditions.checkArgument(actionResult != null && actionResult.getEvent() != null, "null result");
-                        if (actionResult.getFireDuration() == null || actionResult.getFireDuration() == Duration.ZERO) {
-                            processEvent(self, actionResult, timeout);
-                        } else {
-                            context().system().getScheduler().scheduleOnce(actionResult.getFireDuration(), () -> {
-                                processEvent(self, actionResult, timeout);
-                            }, context().dispatcher());
+                    boolean matched = this.actionHandler.isEventMatched(msg);
+                    if (matched) {
+                        ActionHandler.ActionResult actionResult = this.actionHandler.doAction(msg);
+                        if (!this.downStreamDependencies.isEmpty()) {
+                            Preconditions.checkArgument(actionResult != null && actionResult.getEvent() != null, "null result");
+                            if (actionResult.getFireDuration() == null || actionResult.getFireDuration() == Duration.ZERO) {
+                                processEvent(self, actionResult);
+                            } else {
+                                context().system().getScheduler().scheduleOnce(actionResult.getFireDuration(), () -> {
+                                    processEvent(self, actionResult);
+                                }, context().dispatcher());
+                            }
                         }
                     }
                 }).build();
     }
 
-    private void processEvent(ActorRef self, ActionHandler.ActionResult actionResult, Timeout timeout) {
+    private void processEvent(ActorRef self, ActionHandler.ActionResult actionResult) {
         final TaskDependencyCheckRequest request = new TaskDependencyCheckRequest();
         request.setEvent(actionResult.getEvent());
         final List<CompletableFuture<TaskDependencyResponse>> dependencyResults = downStreamDependencies.values().parallelStream()
-                .map(dependency -> {
-                    Future<TaskDependencyResponse> future = Patterns.ask(dependency.getTaskRef(), request, timeout)
-                            .mapTo(ClassTag.apply(TaskDependencyResponse.class));
-                    return FutureUtil.toJava(future);
-                }).collect(toList());
+                .map(dependency ->
+                        Patterns.ask(dependency.getTaskRef(), request, FutureUtil.INF_DURATION)
+                                .toCompletableFuture()
+                                .thenApplyAsync(TaskDependencyResponse.class::cast)
+                ).collect(toList());
 
         FutureUtil.sequence(dependencyResults).whenCompleteAsync((responses, throwable) -> {
             final List<DependencyDescriptorView> candidates = responses.stream().filter(TaskDependencyResponse::isMatched).map(response -> {
@@ -209,7 +189,9 @@ public class ActionTask extends AbstractActorWithStash {
     }
 
 
-    public static Props props(int actionId, ActionHandler actionHandler, TaskContext taskContext, DependencySelectorStrategy dependencySelectorStrategy) {
-        return Props.create(ActionTask.class, () -> new ActionTask(actionId, actionHandler, taskContext, dependencySelectorStrategy));
+    public static Props props(String actionId, Class<? extends ActionHandler> actionHandlerClazz, TaskContext taskContext, Class<? extends DependencySelectorStrategy> dependencyStrategyClazz) {
+        ActionHandler handler = ReflectionUtil.newInstance(actionHandlerClazz);
+        DependencySelectorStrategy dependencySelectorStrategy = ReflectionUtil.newInstance(dependencyStrategyClazz);
+        return Props.create(ActionTask.class, () -> new ActionTask(actionId, handler, taskContext, dependencySelectorStrategy));
     }
 }

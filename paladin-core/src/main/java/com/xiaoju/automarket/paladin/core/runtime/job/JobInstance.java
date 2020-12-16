@@ -1,7 +1,7 @@
 package com.xiaoju.automarket.paladin.core.runtime.job;
 
-import com.xiaoju.automarket.paladin.core.common.StatusEnum;
-import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.common.ExecutionStateEnum;
+import com.xiaoju.automarket.paladin.core.runtime.dcg.JobGraphDescriptor;
 import com.xiaoju.automarket.paladin.core.util.Util;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class JobInstance {
     private final String jobId;
     private final JobGraphDescriptor graphDescriptor;
-    private StatusEnum jobStatus;
+    private ExecutionStateEnum jobStatus;
 
     public JobInstance(JobGraphDescriptor graphDescriptor) {
         this.jobId = Util.generateUUID();

@@ -1,7 +1,7 @@
-package com.xiaoju.automarket.paladin.core.runtime.client;
+package com.xiaoju.automarket.paladin.core.client;
 
 import com.xiaoju.automarket.paladin.core.common.Job;
-import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.runtime.dcg.JobGraphDescriptor;
 
 /**
  * @Author Luogh
@@ -10,5 +10,5 @@ import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
 public interface JobClient {
     Job submitJob(JobGraphDescriptor graphDescriptor);
 
-    Boolean killJob(String jobId);
+    Boolean cancel(String jobId);
 }

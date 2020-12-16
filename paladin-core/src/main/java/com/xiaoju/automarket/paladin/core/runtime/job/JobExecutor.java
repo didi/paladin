@@ -1,7 +1,5 @@
 package com.xiaoju.automarket.paladin.core.runtime.job;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * @Author Luogh
  * @Date 2020/12/6
@@ -12,8 +10,7 @@ public interface JobExecutor {
 
     String getJobExecutorId();
 
-    CompletableFuture<Void> deployJob(JobInstance jobInstance);
+    void deployJob(JobInstance jobInstance);
 
-    CompletableFuture<Void> cancelJob(String jobId);
-
+    void cancelJob(String jobId);
 }

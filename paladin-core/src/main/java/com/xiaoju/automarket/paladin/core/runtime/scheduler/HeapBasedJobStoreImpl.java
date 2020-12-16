@@ -1,8 +1,8 @@
 package com.xiaoju.automarket.paladin.core.runtime.scheduler;
 
 import com.typesafe.config.Config;
-import com.xiaoju.automarket.paladin.core.common.StatusEnum;
-import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.common.ExecutionStateEnum;
+import com.xiaoju.automarket.paladin.core.runtime.dcg.JobGraphDescriptor;
 import com.xiaoju.automarket.paladin.core.runtime.job.JobStore;
 import com.xiaoju.automarket.paladin.core.runtime.job.JobInstance;
 
@@ -30,12 +30,12 @@ public class HeapBasedJobStoreImpl implements JobStore {
     }
 
     @Override
-    public void updateJobStatus(String jobId, StatusEnum jobStatus, Throwable exception) {
+    public void updateJobStatus(String jobId, ExecutionStateEnum jobStatus, Throwable exception) {
 
     }
 
     @Override
-    public List<JobInstance> getJobsInStatus(Set<StatusEnum> jobStatusSet, int expectedSize) {
+    public List<JobInstance> getJobsInStatus(Set<ExecutionStateEnum> jobStatusSet, int expectedSize) {
         return null;
     }
 }

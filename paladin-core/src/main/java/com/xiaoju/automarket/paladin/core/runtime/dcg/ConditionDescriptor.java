@@ -1,4 +1,4 @@
-package com.xiaoju.automarket.paladin.core.dcg;
+package com.xiaoju.automarket.paladin.core.runtime.dcg;
 
 import com.xiaoju.automarket.paladin.core.runtime.handler.ConditionHandler;
 

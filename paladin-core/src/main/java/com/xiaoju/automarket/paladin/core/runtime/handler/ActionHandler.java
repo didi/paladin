@@ -1,7 +1,7 @@
 package com.xiaoju.automarket.paladin.core.runtime.handler;
 
 import com.typesafe.config.Config;
-import com.xiaoju.automarket.paladin.core.runtime.task.Messages;
+import com.xiaoju.automarket.paladin.core.runtime.message.SubscriptionEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,18 +15,18 @@ import java.util.List;
 public interface ActionHandler {
     void initialize(Config config);
 
-    List<Class<Messages.SubscriptionEvent>> subscribeEventTypes();
+    List<Class<SubscriptionEvent>> subscribeEventTypes();
 
-    boolean isEventMatched(Messages.SubscriptionEvent event);
+    boolean isEventMatched(SubscriptionEvent event);
 
-    ActionResult doAction(Messages.SubscriptionEvent event);
+    ActionResult doAction(SubscriptionEvent event);
 
     void destroy();
 
     @Getter
     @Setter
     class ActionResult {
-        private Messages.SubscriptionEvent event;
+        private SubscriptionEvent event;
         private Duration fireDuration;
     }
 }

@@ -1,8 +1,8 @@
 package com.xiaoju.automarket.paladin.core.runtime.job;
 
 import com.typesafe.config.Config;
-import com.xiaoju.automarket.paladin.core.common.StatusEnum;
-import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.common.ExecutionStateEnum;
+import com.xiaoju.automarket.paladin.core.runtime.dcg.JobGraphDescriptor;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,7 @@ public interface JobStore {
 
     JobInstance createJob(JobGraphDescriptor jobGraph);
 
-    void updateJobStatus(String jobId, StatusEnum jobStatus, Throwable exception);
+    void updateJobStatus(String jobId, ExecutionStateEnum jobStatus, Throwable exception);
 
-    List<JobInstance> getJobsInStatus(Set<StatusEnum> jobStatusSet, int expectedSize);
+    List<JobInstance> getJobsInStatus(Set<ExecutionStateEnum> jobStatusSet, int expectedSize);
 }
