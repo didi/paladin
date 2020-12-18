@@ -9,7 +9,8 @@ import java.util.function.Consumer;
  **/
 public class Util {
 
-    private static final Consumer<Object> IGNORE_FN = ignored -> {};
+    private static final Consumer<Object> IGNORE_FN = ignored -> {
+    };
 
     @SuppressWarnings("unchecked")
     public static <T> Consumer<T> ignoreFn() {
@@ -19,4 +20,5 @@ public class Util {
     public static String generateUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
 }

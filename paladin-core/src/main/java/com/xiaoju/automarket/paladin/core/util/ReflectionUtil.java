@@ -1,10 +1,6 @@
 package com.xiaoju.automarket.paladin.core.util;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public final class ReflectionUtil {
-
 
     public static <T> T newInstance(Class<T> clazz) {
         try {

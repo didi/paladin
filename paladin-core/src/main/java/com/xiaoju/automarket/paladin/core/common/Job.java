@@ -8,10 +8,6 @@ public class Job {
     private String jobId;
     private ExecutionStateEnum status;
 
-    public Job(String jobId) {
-        this.jobId = jobId;
-    }
-
     public String getJobId() {
         return jobId;
     }

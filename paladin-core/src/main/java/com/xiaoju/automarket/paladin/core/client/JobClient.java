@@ -1,7 +1,7 @@
 package com.xiaoju.automarket.paladin.core.client;
 
 import com.xiaoju.automarket.paladin.core.common.Job;
-import com.xiaoju.automarket.paladin.core.runtime.dcg.JobGraphDescriptor;
+import com.xiaoju.automarket.paladin.core.dcg.JobGraphDescriptor;
 
 /**
  * @Author Luogh

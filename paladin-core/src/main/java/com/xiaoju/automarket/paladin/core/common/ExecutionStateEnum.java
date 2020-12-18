@@ -6,10 +6,11 @@ package com.xiaoju.automarket.paladin.core.common;
  **/
 public enum ExecutionStateEnum {
     SUBMITTED,
+    DEPLOYING,
     DEPLOYED,
     INITIALIZED,
     RUNNING,
+    CANCELLING,
     CANCELLED,
-    FAILED,
-    KILLED
+    FAILED
 }
