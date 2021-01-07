@@ -44,32 +44,30 @@ class DependencyAttemptTask(private val env: Environment,
   }
 
   override def receive: Receive = {
-    case event@TaskActionRegistry(actionId, _, actionAttemptTaskRef: ActorRef, downstream) =>
+    case event@TaskVertexRegistry(actionId, _, actionAttemptTaskRef: ActorRef, downstream) =>
       if (downstream) {
-        val expectedActionId = task.dependencyDescriptor.getNextActionDescriptor.getActionId
+        val expectedActionId = task.dependencyDescriptor.getNextVertexDescriptor.vertexId()
         require(actionId == expectedActionId, s"received an unexpected downstream action registry event: $event")
         downstreamActions += actionId -> actionAttemptTaskRef
       } else {
-        val expectedActionId = task.dependencyDescriptor.getPreActionDescriptor.getActionId
+        val expectedActionId = task.dependencyDescriptor.getPreVertexDescriptor.vertexId()
         require(actionId == expectedActionId, s"received an unexpected upstream action registry event: $event")
         upstreamActions += actionId -> actionAttemptTaskRef
       }
       // when all action registry is completed, set dependency as running state
       val upstreamActionCompleted =
-        if (task.dependencyDescriptor.getPreActionDescriptor != null)
-          upstreamActions.contains(task.dependencyDescriptor.getPreActionDescriptor.getActionId) else false
+        if (task.dependencyDescriptor.getPreVertexDescriptor != null)
+          upstreamActions.contains(task.dependencyDescriptor.getPreVertexDescriptor.vertexId()) else false
       val downstreamActionCompleted =
-        if (task.dependencyDescriptor.getNextActionDescriptor != null)
-          downstreamActions.contains(task.dependencyDescriptor.getNextActionDescriptor.getActionId) else false
+        if (task.dependencyDescriptor.getNextVertexDescriptor != null)
+          downstreamActions.contains(task.dependencyDescriptor.getNextVertexDescriptor.vertexId()) else false
 
       if (upstreamActionCompleted && downstreamActionCompleted) {
         jobExecutor.actorRef ! TaskAttemptExecutionState(task.taskId, taskAttemptId, ExecutionStateEnum.RUNNING)
       }
       unstashAll()
       context.become(onRunningState)
-    case _: BizEvent =>
-      stash()
-    case _: TaskDependencyMatchedEvent =>
+    case _ =>
       stash()
   }
 
@@ -85,7 +83,6 @@ class DependencyAttemptTask(private val env: Environment,
         case (_, actorRef) =>
           actorRef forward event
       }
-
   }
 }
 

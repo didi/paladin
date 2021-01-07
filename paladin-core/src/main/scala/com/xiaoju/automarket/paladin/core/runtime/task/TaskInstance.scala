@@ -1,6 +1,6 @@
 package com.xiaoju.automarket.paladin.core.runtime.task
 
-import com.xiaoju.automarket.paladin.core.dcg.{ActionDescriptor, DependencyDescriptor}
+import com.xiaoju.automarket.paladin.core.dcg.{ActionDescriptor, DependencyDescriptor, SourceDescriptor}
 import com.xiaoju.automarket.paladin.core.runtime.{JobId, TaskId}
 
 /**
@@ -15,6 +15,19 @@ sealed trait TaskInstance {
   def getTaskId: TaskId
 
   def getJobId: JobId
+}
+
+case class SourceTaskInstance(
+                               jobId: JobId, taskId: TaskId,
+                               sourceDescriptor: SourceDescriptor
+                             ) extends TaskInstance {
+  override type TaskDescriptor = SourceDescriptor
+
+  override def getTaskDescriptor: SourceDescriptor = sourceDescriptor
+
+  override def getTaskId: TaskId = taskId
+
+  override def getJobId: JobId = jobId
 }
 
 case class ActionTaskInstance(jobId: JobId, taskId: TaskId,

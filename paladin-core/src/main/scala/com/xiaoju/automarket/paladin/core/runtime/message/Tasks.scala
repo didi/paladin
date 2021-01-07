@@ -37,4 +37,6 @@ case class TaskDependencyMatchResultResponse(taskId: TaskId, isMatching: Boolean
 
 case class TaskDependencyMatchedEvent(event: BizEvent, downstreamActionTasks: Set[TaskId])
 
-case class TaskActionRegistry(taskId: TaskId, taskAttemptId: TaskAttemptId, taskAttemptActor: ActorRef, downstream: Boolean)
+case class TaskVertexRegistry(taskId: TaskId, taskAttemptId: TaskAttemptId, taskAttemptActor: ActorRef, downstream: Boolean)
+
+case object TaskInit

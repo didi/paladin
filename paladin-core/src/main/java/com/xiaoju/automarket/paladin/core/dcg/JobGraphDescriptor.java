@@ -1,7 +1,6 @@
 package com.xiaoju.automarket.paladin.core.dcg;
 
-import lombok.Getter;
-
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,6 +8,7 @@ import java.util.Map;
  * @Date 2020/11/8
  **/
 public class JobGraphDescriptor {
+    private List<SourceDescriptor> sources;
     private Map<String, ActionDescriptor> actions;
     private Map<String, DependencyDescriptor> dependencies;
 
@@ -26,5 +26,13 @@ public class JobGraphDescriptor {
 
     public void setDependencies(Map<String, DependencyDescriptor> dependencies) {
         this.dependencies = dependencies;
+    }
+
+    public List<SourceDescriptor> getSources() {
+        return sources;
+    }
+
+    public void setSources(List<SourceDescriptor> sources) {
+        this.sources = sources;
     }
 }

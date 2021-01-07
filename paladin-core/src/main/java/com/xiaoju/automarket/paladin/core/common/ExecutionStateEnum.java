@@ -8,6 +8,7 @@ public enum ExecutionStateEnum {
     SUBMITTED,
     DEPLOYING,
     DEPLOYED,
+    INITIALIZING,
     INITIALIZED,
     RUNNING,
     CANCELLING,

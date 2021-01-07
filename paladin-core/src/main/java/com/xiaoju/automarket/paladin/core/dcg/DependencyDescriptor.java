@@ -13,15 +13,19 @@ public class DependencyDescriptor {
     private final String dependencyId;
     private final ConditionHandler conditionHandler;
     private double weight;
-    private String dependencyName;
-    private ActionDescriptor preActionDescriptor;
-    private ActionDescriptor nextActionDescriptor;
+    private final VertexDescriptor<?> preVertexDescriptor;
+    private final VertexDescriptor<?> nextVertexDescriptor;
+    private final String dependencyName;
 
-    public DependencyDescriptor(ConditionHandler conditionHandler) {
+    public DependencyDescriptor(String name, ConditionHandler conditionHandler, VertexDescriptor<?> preVertexDescriptor, VertexDescriptor<?> nextVertexDescriptor) {
         Preconditions.checkArgument(conditionHandler != null, "conditionHandler");
+        Preconditions.checkArgument(preVertexDescriptor != null, "preVertexDescriptor");
+        Preconditions.checkArgument(nextVertexDescriptor != null, "nextVertexDescriptor");
         this.dependencyId = Util.generateUUID();
-        this.dependencyName = conditionHandler.getClass().getName();
+        this.dependencyName = name;
         this.conditionHandler = conditionHandler;
+        this.preVertexDescriptor = preVertexDescriptor;
+        this.nextVertexDescriptor = nextVertexDescriptor;
     }
 
     @Override
@@ -57,34 +61,23 @@ public class DependencyDescriptor {
         return dependencyName;
     }
 
-    public void setDependencyName(String dependencyName) {
-        this.dependencyName = dependencyName;
+    public VertexDescriptor<?> getPreVertexDescriptor() {
+        return preVertexDescriptor;
     }
 
-    public ActionDescriptor getPreActionDescriptor() {
-        return preActionDescriptor;
+    public VertexDescriptor<?> getNextVertexDescriptor() {
+        return nextVertexDescriptor;
     }
 
-    public void setPreActionDescriptor(ActionDescriptor preActionDescriptor) {
-        this.preActionDescriptor = preActionDescriptor;
-    }
-
-    public ActionDescriptor getNextActionDescriptor() {
-        return nextActionDescriptor;
-    }
-
-    public void setNextActionDescriptor(ActionDescriptor nextActionDescriptor) {
-        this.nextActionDescriptor = nextActionDescriptor;
-    }
 
     public DependencyDescriptorView toView() {
         return new DependencyDescriptorView(dependencyId,
                 dependencyName,
                 weight,
-                preActionDescriptor.getActionId(),
-                preActionDescriptor.getActionName(),
-                nextActionDescriptor.getActionId(),
-                nextActionDescriptor.getActionName()
+                preVertexDescriptor.vertexId(),
+                preVertexDescriptor.vertexName(),
+                nextVertexDescriptor.vertexId(),
+                nextVertexDescriptor.vertexName()
         );
     }
 
@@ -93,19 +86,20 @@ public class DependencyDescriptor {
         private final String dependencyId;
         private final String dependencyName;
         private final double weight;
-        private final String upstreamActionId;
-        private final String upstreamActionName;
-        private final String downstreamActionId;
-        private final String downstreamActionName;
+        private final String upstreamVertexId;
+        private final String upstreamVertexName;
+        private final String downstreamVertexId;
+        private final String downstreamVertexName;
 
-        public DependencyDescriptorView(String dependencyId, String dependencyName, double weight, String preActionId, String upstreamActionName, String downstreamActionId, String downstreamActionName) {
+        public DependencyDescriptorView(String dependencyId, String dependencyName, double weight, String preVertexId,
+                                        String upstreamVertexName, String downstreamVertexId, String downstreamVertexName) {
             this.dependencyId = dependencyId;
             this.dependencyName = dependencyName;
             this.weight = weight;
-            this.upstreamActionId = preActionId;
-            this.upstreamActionName = upstreamActionName;
-            this.downstreamActionId = downstreamActionId;
-            this.downstreamActionName = downstreamActionName;
+            this.upstreamVertexId = preVertexId;
+            this.upstreamVertexName = upstreamVertexName;
+            this.downstreamVertexId = downstreamVertexId;
+            this.downstreamVertexName = downstreamVertexName;
         }
 
         public String getDependencyId() {
@@ -120,20 +114,20 @@ public class DependencyDescriptor {
             return weight;
         }
 
-        public String getUpstreamActionId() {
-            return upstreamActionId;
+        public String getUpstreamVertexId() {
+            return upstreamVertexId;
         }
 
-        public String getUpstreamActionName() {
-            return upstreamActionName;
+        public String getUpstreamVertexName() {
+            return upstreamVertexName;
         }
 
-        public String getDownstreamActionId() {
-            return downstreamActionId;
+        public String getDownstreamVertexId() {
+            return downstreamVertexId;
         }
 
-        public String getDownstreamActionName() {
-            return downstreamActionName;
+        public String getDownstreamVertexName() {
+            return downstreamVertexName;
         }
     }
 

@@ -11,4 +11,5 @@ package object runtime {
   type JobSchedulerId = String
   type JobExecutorId = String
   type TaskAttemptId = String
+  type TaskIdentifier = (TaskId, TaskAttemptId)
 }

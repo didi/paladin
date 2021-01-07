@@ -19,5 +19,13 @@ public interface ActionHandler {
         void collect(BizEvent out, Duration fireDuration);
 
         void collect(BizEvent out);
+
+        void onCallback(String callbackId, ActionCallbackHandler callbackHandler, Duration timeout);
+    }
+
+    interface ActionCallbackHandler {
+        void handle(BizCallbackEvent event);
+
+        void onTimeout();
     }
 }

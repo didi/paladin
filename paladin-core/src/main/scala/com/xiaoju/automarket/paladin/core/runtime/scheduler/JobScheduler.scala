@@ -1,13 +1,14 @@
 package com.xiaoju.automarket.paladin.core.runtime.scheduler
 
-import akka.actor.{Actor, ActorLogging, PoisonPill, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, PoisonPill, Props}
 import akka.util.Timeout
 import com.xiaoju.automarket.paladin.core.common.ExecutionStateEnum
 import com.xiaoju.automarket.paladin.core.runtime.common.Environment
 import com.xiaoju.automarket.paladin.core.runtime.executor.JobExecutor
 import com.xiaoju.automarket.paladin.core.runtime.message._
+import com.xiaoju.automarket.paladin.core.runtime.scheduler.JobScheduler.JobSchedulerInstance
 import com.xiaoju.automarket.paladin.core.runtime.util.Util
-import com.xiaoju.automarket.paladin.core.runtime.{JobId, scheduler}
+import com.xiaoju.automarket.paladin.core.runtime.{JobId, JobSchedulerId, scheduler}
 
 import scala.collection.mutable.{Map => MMap}
 import scala.concurrent.ExecutionContextExecutor
@@ -25,7 +26,7 @@ class JobScheduler(val env: Environment) extends Actor with ActorLogging {
   private val allSubmittedJobs: MMap[JobId, JobInstance] = MMap.empty
 
   override def preStart(): Unit = {
-    this.jobSchedulerInstance = scheduler.JobSchedulerInstance(Util.generateUUID, self)
+    this.jobSchedulerInstance = JobSchedulerInstance(Util.generateUUID, self)
   }
 
   override def receive: Receive = {
@@ -58,5 +59,7 @@ class JobScheduler(val env: Environment) extends Actor with ActorLogging {
 object JobScheduler {
 
   def props(env: Environment): Props = Props(new JobScheduler(env))
+
+  case class JobSchedulerInstance(schedulerId: JobSchedulerId, actorRef: ActorRef)
 
 }

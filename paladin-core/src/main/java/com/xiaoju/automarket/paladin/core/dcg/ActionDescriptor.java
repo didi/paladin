@@ -11,7 +11,7 @@ import java.util.Objects;
  * @Date 2020/11/8
  **/
 
-public class ActionDescriptor {
+public class ActionDescriptor implements VertexDescriptor<ActionHandler> {
     private final String actionId;
     private final ActionHandler actionHandler;
 
@@ -27,6 +27,23 @@ public class ActionDescriptor {
         this.actionHandler = actionHandler;
     }
 
+
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
+    }
+
+    public void setUpstreamDependencies(List<DependencyDescriptor> upstreamDependencies) {
+        this.upstreamDependencies = upstreamDependencies;
+    }
+
+    public void setDownstreamDependencies(List<DependencyDescriptor> downstreamDependencies) {
+        this.downstreamDependencies = downstreamDependencies;
+    }
+
+    public void setDependencySelectorStrategy(DependencySelectorStrategy dependencySelectorStrategy) {
+        this.dependencySelectorStrategy = dependencySelectorStrategy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,43 +57,34 @@ public class ActionDescriptor {
         return Objects.hash(actionId);
     }
 
-    public String getActionId() {
-        return actionId;
+
+    @Override
+    public String vertexId() {
+        return this.actionId;
     }
 
-    public ActionHandler getActionHandler() {
-        return actionHandler;
+    @Override
+    public String vertexName() {
+        return this.actionName;
     }
 
-    public String getActionName() {
-        return actionName;
+    @Override
+    public ActionHandler vertexHandler() {
+        return this.actionHandler;
     }
 
-    public void setActionName(String actionName) {
-        this.actionName = actionName;
+    @Override
+    public DependencySelectorStrategy downstreamDependencySelectorStrategy() {
+        return this.dependencySelectorStrategy;
     }
 
-    public List<DependencyDescriptor> getUpstreamDependencies() {
-        return upstreamDependencies;
+    @Override
+    public List<DependencyDescriptor> upstreamDependencies() {
+        return this.upstreamDependencies;
     }
 
-    public void setUpstreamDependencies(List<DependencyDescriptor> upstreamDependencies) {
-        this.upstreamDependencies = upstreamDependencies;
-    }
-
-    public List<DependencyDescriptor> getDownstreamDependencies() {
-        return downstreamDependencies;
-    }
-
-    public void setDownstreamDependencies(List<DependencyDescriptor> downstreamDependencies) {
-        this.downstreamDependencies = downstreamDependencies;
-    }
-
-    public DependencySelectorStrategy getDependencySelectorStrategy() {
-        return dependencySelectorStrategy;
-    }
-
-    public void setDependencySelectorStrategy(DependencySelectorStrategy dependencySelectorStrategy) {
-        this.dependencySelectorStrategy = dependencySelectorStrategy;
+    @Override
+    public List<DependencyDescriptor> downstreamDependencies() {
+        return this.downstreamDependencies;
     }
 }
