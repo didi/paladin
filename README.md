@@ -60,9 +60,11 @@ Any contribution is welcome. All issues and pull requests are highly appreciated
 
 ## Community
 
-**dingtalk : **
+** dingtalk : **
 
-![dingtalk](Paladin_DINGDING.JPG =100*100)
+![dingtalk](Paladin_DINGDING.JPG)
+
+<img alt="Apache-2.0 license" src="https://git.xiaojukeji.com/opensource/paladin/raw/master/Paladin_DINGDING.JPG" width="128">
 
 ## License
 
