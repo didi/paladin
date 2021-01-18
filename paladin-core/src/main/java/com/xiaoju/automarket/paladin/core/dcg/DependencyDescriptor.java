@@ -93,8 +93,13 @@ public class DependencyDescriptor {
         private final String downstreamVertexId;
         private final String downstreamVertexName;
 
-        public DependencyDescriptorView(String dependencyId, String dependencyName, double weight, String preVertexId,
-                                        String upstreamVertexName, String downstreamVertexId, String downstreamVertexName) {
+        public DependencyDescriptorView(String dependencyId,
+                                        String dependencyName,
+                                        double weight,
+                                        String preVertexId,
+                                        String upstreamVertexName,
+                                        String downstreamVertexId,
+                                        String downstreamVertexName) {
             this.dependencyId = dependencyId;
             this.dependencyName = dependencyName;
             this.weight = weight;
