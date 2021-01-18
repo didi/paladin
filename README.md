@@ -59,7 +59,10 @@ Paladin is implemented in the responsive programming model framework and combine
 Any contribution is welcome. All issues and pull requests are highly appreciated! For more details, please refer to [the contribution guide](CONTRIBUTING.md).
 
 ## Community
-![dingtalk](Paladin_DINGDING.JPG)
+
+**dingtalk : **
+
+![dingtalk](Paladin_DINGDING.JPG =100*100)
 
 ## License
 
