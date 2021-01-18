@@ -15,7 +15,7 @@ public class JTuple2<K, V> {
     }
 
     public static <K, V> JTuple2<K, V> of (K k, V v) {
-       return new JTuple2<>(k, v);
+        return new JTuple2<>(k, v);
     }
 
     public K getK() {

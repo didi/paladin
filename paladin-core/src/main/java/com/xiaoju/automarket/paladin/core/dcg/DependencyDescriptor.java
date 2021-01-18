@@ -17,7 +17,9 @@ public class DependencyDescriptor {
     private final VertexDescriptor<?> nextVertexDescriptor;
     private final String dependencyName;
 
-    public DependencyDescriptor(String name, ConditionHandler conditionHandler, VertexDescriptor<?> preVertexDescriptor, VertexDescriptor<?> nextVertexDescriptor) {
+    public DependencyDescriptor(String name, ConditionHandler conditionHandler,
+                                VertexDescriptor<?> preVertexDescriptor,
+                                VertexDescriptor<?> nextVertexDescriptor) {
         Preconditions.checkArgument(conditionHandler != null, "conditionHandler");
         Preconditions.checkArgument(preVertexDescriptor != null, "preVertexDescriptor");
         Preconditions.checkArgument(nextVertexDescriptor != null, "nextVertexDescriptor");

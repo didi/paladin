@@ -19,7 +19,10 @@ public final class ReflectionUtil {
         }
     }
 
-    public static <T> T newInstance(String subClassName, Class<T> interfaceClass, Class<?>[] paramTypes, Object[] params) {
+    public static <T> T newInstance(String subClassName,
+                                    Class<T> interfaceClass,
+                                    Class<?>[] paramTypes,
+                                    Object[] params) {
         try {
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(subClassName);
             return clazz.asSubclass(interfaceClass).getConstructor(paramTypes).newInstance(params);
