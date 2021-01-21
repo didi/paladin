@@ -4,7 +4,7 @@ Paladin is an intelligent reach engine.
 
 # Overview
 
-Paladin is an intelligent reach engine produced by Didi xiaojuchefu algorithm team. It is based on DCG (Dynamic Routing Directed Cycle Graph) and combined with the visual interface to reduce configuration cost and support complex algorithms.
+Paladin is a strategy engine powered by Xiaoju Car Service algorithm team. It is based on DCG (Dynamic Routing Directed Cycle Graph) and combined with the visual interface to reduce configuration cost and support complex algorithms.
 
 Paladin is implemented in the responsive programming model framework and combined with dynamic scripting, plugin-deployment to greatly reduce the cost of development and deployment. It also keeps the extensible interface for the algorithm to maximize the convenience and flexibility of the deployment.
 
